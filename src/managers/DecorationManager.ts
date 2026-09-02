@@ -24,35 +24,34 @@ export class DecorationManager {
             this._container.classList.add("catify__img-container");
             this._bar.prepend(this._container);
 
-            const decorationStyle = document.createElement("style");
-            decorationStyle.textContent = `
-            .catify__img-container {
-                position: relative;
-            }
+            const style = document.createElement("style");
+            style.textContent = `
+                .catify__img-container {
+                    position: relative;
+                }
+    
+                .catify__decoration {
+                    position: absolute;
+                    pointer-events: none;
+                }
+    
+                .catify__img-container--paused .catify__decoration {
+                    animation-play-state: paused !important;
+                }
+           `;
 
-            .catify__decoration {
-                position: absolute;
-                pointer-events: none;
-            }
-
-            .catify__img-container--paused .catify__decoration {
-                animation-play-state: paused !important;
-            }
-        `;
-
-            document.head.appendChild(decorationStyle);
+            document.head.appendChild(style);
 
             Spicetify.Player.addEventListener("onplaypause", (event) => {
                 this.setPaused(event?.data.isPaused ?? !Spicetify.Player.isPlaying());
             });
 
             this._initialized = true;
-
             func();
         });
     }
 
-    public placeDecorations(decorations: BarDecoration[]): void {
+    public placeBarDecorations(decorations: BarDecoration[]): void {
         if (!this._initialized) return;
 
         console.log("[Catify] DecorationManager: Placing decorations on the playback progress bar.");
